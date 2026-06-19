@@ -1,0 +1,3 @@
+默认使用中文回答和写代码注释！
+需要写测试
+总是使用github工具(get_file_contents、search_code、search_repositories等)获取外部库的文档和代码，防止因为过时的记忆而导致的错误。

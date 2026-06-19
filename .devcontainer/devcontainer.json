@@ -1,0 +1,51 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/rust
+{
+	"name": "Rust",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/rust:2-1-trixie",
+
+	// Use 'mounts' to make the cargo cache persistent in a Docker Volume.
+	"mounts": [
+		{
+			"source": "devcontainer-cargo-cache-${devcontainerId}",
+			"target": "/usr/local/cargo",
+			"type": "volume"
+		},
+		{
+			"source": "opencode_share",
+			"target": "/home/vscode/.local/share/opencode",
+			"type": "volume"
+		},
+		{
+			"source": "opencode_config",
+			"target": "/home/vscode/.config/opencode",
+			"type": "volume"
+		},
+		{
+			"source": "opencode_cache",
+			"target": "/home/vscode/.cache/opencode",
+			"type": "volume"
+		},
+		{
+			"source": "opencode_state",
+			"target": "/home/vscode/.local/state/opencode",
+			"type": "volume"
+		}
+	],
+
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	// "features": {}
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "curl -fsSL https://opencode.ai/install | bash"
+
+	// Configure tool-specific properties.
+	// "customizations": {},
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

@@ -1,0 +1,13 @@
+services:
+  cloud-metric-export:
+    image: cloud-metric-export:latest
+    build: .
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    environment:
+      TZ: Asia/Shanghai
+      CLOUD_64CLOUDS_VEID: ${CLOUD_64CLOUDS_VEID}
+      CLOUD_64CLOUDS_API_KEY: ${CLOUD_64CLOUDS_API_KEY}
+      # METRICS_PORT: 9090
+      # FETCH_INTERVAL: 60
