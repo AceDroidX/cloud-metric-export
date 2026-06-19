@@ -55,13 +55,7 @@ impl AwsLightsailClient {
             "Fetching AWS Lightsail network metrics"
         );
 
-        let network_in = self
-            .get_metric_data("NetworkIn", start_time, end_time)
-            .await?;
-        let network_out = self
-            .get_metric_data("NetworkOut", start_time, end_time)
-            .await?;
-
+        // First, verify the instance exists
         let instance = self
             .client
             .get_instance()
@@ -69,8 +63,9 @@ impl AwsLightsailClient {
             .send()
             .await
             .map_err(|e| {
-                error!("Failed to get instance info: {}", e);
-                format!("Failed to get instance info: {}", e)
+                let err_msg = format!("{:?}", e);
+                error!("Failed to get instance info: {} (debug: {})", e, err_msg);
+                format!("Failed to get instance info: {} (debug: {})", e, err_msg)
             })?;
 
         let monthly_transfer_limit = instance
@@ -80,6 +75,19 @@ impl AwsLightsailClient {
             .and_then(|t| t.gb_per_month_allocated())
             .unwrap_or(0) as f64
             * 1073741824.0; // Convert GB to bytes
+
+        info!(
+            instance = self.instance_name,
+            monthly_transfer_limit = monthly_transfer_limit,
+            "Instance info fetched successfully"
+        );
+
+        let network_in = self
+            .get_metric_data("NetworkIn", start_time, end_time)
+            .await?;
+        let network_out = self
+            .get_metric_data("NetworkOut", start_time, end_time)
+            .await?;
 
         info!(
             instance = self.instance_name,
@@ -119,8 +127,15 @@ impl AwsLightsailClient {
             .send()
             .await
             .map_err(|e| {
-                error!("Failed to get metric data for {}: {}", metric_name, e);
-                format!("Failed to get metric data for {}: {}", metric_name, e)
+                let err_msg = format!("{:?}", e);
+                error!(
+                    "Failed to get metric data for {}: {} (debug: {})",
+                    metric_name, e, err_msg
+                );
+                format!(
+                    "Failed to get metric data for {}: {} (debug: {})",
+                    metric_name, e, err_msg
+                )
             })?;
 
         let total: f64 = result.metric_data().iter().filter_map(|dp| dp.sum()).sum();
