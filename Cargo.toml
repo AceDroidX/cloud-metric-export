@@ -13,7 +13,11 @@ axum = "0.8"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 dotenvy = "0.15"
+aws-sdk-lightsail = "1"
+aws-config = "1"
+chrono = "0.4"
 
 [dev-dependencies]
 tower = { version = "0.5", features = ["util"] }
 http-body-util = "0.1"
+serial_test = "3"
